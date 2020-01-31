@@ -42,9 +42,9 @@ def get_data():
     except:
         try:
             IFTTT_push("数据获取失败。", "请拨冗通知服务运营者。", True)
-            output_log("数据获取失败！请检查您的程序！\n")
+            output_log("数据获取失败！请检查程序！\n")
         except:
-            output_log("数据获取失败！请检查您的网路！\n")
+            output_log("数据获取失败！请检查网路！\n")
     
     output_log("本轮推送结束。")
 #    vars = (res, res, data_dome, text_dome, data_prov, text_prov, text_prov)
@@ -62,11 +62,11 @@ def IFTTT_push(push_text_1, push_text_2, silent_mode):
         requests.post(post_url, data = body.encode('utf-8'), headers = headers)
         if not silent_mode: output_log("推送完成。\n")
     except:
-        output_log("推送失败，请检查您的设置！\n")
+        output_log("推送失败，请检查设置！\n")
 
 if __name__ == "__main__":
     IFTTT_push("程序已上线。\\n","推送模式：整点推送。", True)
-    output_log("程序上线")
+    output_log("程序已上线")
     output_log("当前设备 Host Name: " + host_name + "\n")
 
     get_data()
