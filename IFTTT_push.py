@@ -2,6 +2,7 @@
 
 import json
 import requests
+import pandas as paths
 import socket
 
 from datetime import datetime
@@ -9,13 +10,25 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 get_Data_URL = "https://view.inews.qq.com/g2/getOnsInfo"
-post_url = "https://maker.ifttt.com/trigger/program_push/with/key/fP7Zt7dO7IqmDBZI49uEUfagP4rnYK9gD5jTLYmKMRG"
+sub_doc_path = 'subscribed_urls.csv'
+
+post_url_p1 = "https://maker.ifttt.com/trigger/"
+post_url_p2 = "/with/key/"
+post_urls = ["https://view.inews.qq.com/g2/getOnsInfo/program_push/with/key/fP7Zt7dO7IqmDBZI49uEUfagP4rnYK9gD5jTLYmKMRG",]
 host_name = socket.gethostname()
 
 
 def output_log(log_text): print("[", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "] ", log_text)
 
 def get_data():
+    output_log("开启一轮推送。\n")
+    try:
+        global post_urls
+        post_urls = read_urls(sub_doc_path)
+        output_log("读取到" + str(len(post_urls)) + "条订阅地址。\n")
+    except:
+        output_log("订阅地址获取失败！请检查程序！\n")
+    
     output_log("正获取数据自 " + get_Data_URL)
 
     try:
@@ -59,16 +72,27 @@ def IFTTT_push(push_text_1, push_text_2, silent_mode):
     headers = { 'Content-Type': 'application/json' }
 
     try:
-        requests.post(post_url, data = body.encode('utf-8'), headers = headers)
-        if not silent_mode: output_log("推送完成。\n")
+        for url in post_urls:
+            requests.post(url, data = body.encode('utf-8'), headers = headers)
+            if not silent_mode: output_log("已完成对" + str(len(post_urls)) + "个地址的推送。\n")
     except:
         output_log("推送失败，请检查设置！\n")
 
+def read_urls(path):
+    a = paths.read_csv(path)
+    names = a['event_name']
+    keys  = a['key']
+    urls  = [post_url_p1 + names[i] + post_url_p2 + keys[i] for i in range(len(names))]
+    return urls
+
 if __name__ == "__main__":
-    IFTTT_push("程序已上线。\\n","推送模式：整点推送。", True)
-    output_log("程序已上线")
+    post_urls = read_urls(sub_doc_path)
+    IFTTT_push("程序已上线。","推送模式：整点推送。", True)
+
+    output_log("程序已上线。")
     output_log("当前设备 Host Name: " + host_name + "\n")
 
+    output_log("开始运行推送服务。推送模式：整点推送。\n")
     get_data()
     scheduler = BlockingScheduler()
     trigger = CronTrigger(hour='*/1')
