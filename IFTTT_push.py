@@ -85,7 +85,6 @@ def read_urls(path):
     return urls
 
 if __name__ == "__main__":
-    global post_urls
     post_urls = read_urls(sub_doc_path)
     IFTTT_push("程序已上线。","推送模式：整点推送。\\n", True)
 
