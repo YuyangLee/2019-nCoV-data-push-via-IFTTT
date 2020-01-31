@@ -41,7 +41,7 @@ def get_data():
         
         text_dome = text_dome + "\\n\\n📰最新消息："
         for i in range(4):
-            text_dome = text_dome + "\\n[]" + news[i]['time'] + "]" + news[i]['title']
+            text_dome = text_dome + "\\n[" + news[i]['time'] + "]" + news[i]['title']
 
         data_prov = data['areaTree'][0]['children'][25]
         text_prov = "\\n🏙宁夏数据：\\n确诊:"
