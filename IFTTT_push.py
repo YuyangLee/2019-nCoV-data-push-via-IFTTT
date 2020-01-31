@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import json
 import requests
 import pandas as paths
@@ -14,7 +13,7 @@ sub_doc_path = 'subscribed_urls.csv'
 
 post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
-post_urls = ["https://view.inews.qq.com/g2/getOnsInfo/program_push/with/key/fP7Zt7dO7IqmDBZI49uEUfagP4rnYK9gD5jTLYmKMRG",]
+post_urls = ["https://maker.ifttt.com/trigger/program_push/with/key/fP7Zt7dO7IqmDBZI49uEUfagP4rnYK9gD5jTLYmKMRG",]
 host_name = socket.gethostname()
 
 
@@ -86,8 +85,9 @@ def read_urls(path):
     return urls
 
 if __name__ == "__main__":
+    global post_urls
     post_urls = read_urls(sub_doc_path)
-    IFTTT_push("程序已上线。","推送模式：整点推送。", True)
+    IFTTT_push("程序已上线。","推送模式：整点推送。\\n", True)
 
     output_log("程序已上线。")
     output_log("当前设备 Host Name: " + host_name + "\n")
