@@ -86,7 +86,7 @@ def read_urls(path):
 
 if __name__ == "__main__":
     post_urls = read_urls(sub_doc_path)
-    IFTTT_push("程序已上线。","推送模式：整点推送。", True)
+    IFTTT_push("程序已上线。","推送模式：整点推送。\\n", True)
 
     output_log("程序已上线。")
     output_log("当前设备 Host Name: " + host_name + "\n")
