@@ -19,6 +19,7 @@ def read_urls(path):
     return urls
 
 host_name = socket.gethostname()
+post_urls = read_urls(sub_doc_path)
 
 push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n推送内容："
 push_val2_text = "\\n" + "程序下线。"
