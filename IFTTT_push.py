@@ -13,7 +13,6 @@ sub_doc_path = 'subscribed_urls.csv'
 
 post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
-post_urls = ["https://maker.ifttt.com/trigger/program_push/with/key/fP7Zt7dO7IqmDBZI49uEUfagP4rnYK9gD5jTLYmKMRG",]
 host_name = socket.gethostname()
 
 
