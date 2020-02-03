@@ -15,6 +15,8 @@ post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
 host_name = socket.gethostname()
 
+area_requested = ['宁夏', '湖北']
+
 def output_log(log_text): print("[", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "] ", log_text)
 
 def get_data():
@@ -44,18 +46,19 @@ def get_data():
 
 
         data_prov = data['areaTree'][0]['children']
-        NXindex = -1
-        for i in range(len(data_prov)):
-            if (data_prov[i]['name'] == '宁夏'):
-                NXindex = i
-                break
-        
-        if i >= 0:
-            data_prov = data_prov[NXindex]
-            text_prov = "\\n🏙宁夏数据：\\n确诊:"
-            text_prov = text_prov + str(data_prov['total']['confirm']) + "(+" + str(data_prov['today']['confirm']) + ")\\t疑似:" + str(data_prov['total']['suspect']) + "(+" + str(data_prov['today']['suspect']) + ")\\n死亡:" + str(data_prov['total']['dead']) + "(+" + str(data_prov['today']['dead']) + ")\\t\\t治愈:" + str(data_prov['total']['heal']) + "(+" + str(data_prov['today']['heal']) + ")\\n"
-            for city in data_prov['children']:
-                text_prov = text_prov + "▪" + city['name'] + "数据:\\n确诊:" + str(city['total']['confirm']) + "(+" + str(city['today']['confirm']) + ")\\t\\t疑似:" + str(city['total']['suspect']) + "(+" + str(city['today']['suspect']) + ")\\n死亡:" + str(city['total']['dead']) + "(+" + str(city['today']['dead']) + ")\\t\\t治愈:" + str(city['total']['heal']) + "(+" + str(city['today']['confirm']) + ")\\n"
+        for area_req in area_requested:
+            prov_index = -1
+            for i in range(len(data_prov)):
+                if (data_prov[i]['name'] == area_req):
+                    prov_index = i
+                    break
+            
+            if i >= 0:
+                data_prov = data_prov[prov_index]
+                text_prov = "\\n🏙" + area_req + "数据：\\n确诊:"
+                text_prov = text_prov + str(data_prov['total']['confirm']) + "(+" + str(data_prov['today']['confirm']) + ")\\t疑似:" + str(data_prov['total']['suspect']) + "(+" + str(data_prov['today']['suspect']) + ")\\n死亡:" + str(data_prov['total']['dead']) + "(+" + str(data_prov['today']['dead']) + ")\\t\\t治愈:" + str(data_prov['total']['heal']) + "(+" + str(data_prov['today']['heal']) + ")\\n"
+                for city in data_prov['children']:
+                    text_prov = text_prov + "▪" + city['name'] + "数据:\\n确诊:" + str(city['total']['confirm']) + "(+" + str(city['today']['confirm']) + ")\\t\\t疑似:" + str(city['total']['suspect']) + "(+" + str(city['today']['suspect']) + ")\\n死亡:" + str(city['total']['dead']) + "(+" + str(city['today']['dead']) + ")\\t\\t治愈:" + str(city['total']['heal']) + "(+" + str(city['today']['confirm']) + ")\\n"
 
         output_log("数据获取成功，准备推送至IFTTT。")
         IFTTT_push(text_dome, text_prov, False)
@@ -94,7 +97,7 @@ def read_urls(path):
 
 if __name__ == "__main__":
     post_urls = read_urls(sub_doc_path)
-    IFTTT_push("程序已上线。","推送模式：整点推送。\\n", True)
+    IFTTT_push("程序已上线。","推送模式：半点、整点推送。\\n", True)
 
     output_log("程序已上线。")
     output_log("当前设备 Host Name: " + host_name + "\n")
