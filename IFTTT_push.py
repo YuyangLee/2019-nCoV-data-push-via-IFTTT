@@ -8,12 +8,14 @@ from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
+cur_version = "1.0.0 Alpha"
+
 get_Data_URL = "https://view.inews.qq.com/g2/getOnsInfo"
 sub_doc_path = 'subscribed_urls.csv'
 
 post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
-host_name = socket.gethostname()
+host_name   = socket.gethostname()
 
 area_requested = ['宁夏', '湖北']
 
@@ -38,29 +40,32 @@ def get_data():
 
         data_dome = data['chinaTotal']
         text_dome = "\\n🇨🇳全国数据：\\n截止" + str(data['lastUpdateTime']) + " GMT+8：\\n确诊:" + str(data_dome['confirm']) + "\\t疑似:" + str(data_dome['suspect']) + "\\n死亡:" + str(data_dome['dead']) + "\\t治愈:" + str(data_dome['heal'])
-        
+        text_prov = "\\n"
+
         text_dome = text_dome + "\\n\\n📰最新消息："
         for i in range(4):
             index = len(news) - 1 - i
             text_dome = text_dome + "\\n[" + news[index]['time'] + "]" + news[index]['title']
 
-
         data_prov_tree = data['areaTree'][0]['children']
+        # output_log(data_prov_tree)
         for area_req in area_requested:
             prov_index = -1
-            for i in range(len(data_prov)):
-                if (data_prov_tree[i]['name'] == area_req):
+            for i in range(len(data_prov_tree)):
+                if data_prov_tree[i]['name'] == area_req:
+                    output_log("于索引 " + str(i) + " 找到 " + area_req + "数据。")
                     prov_index = i
                     break
             
             if i >= 0:
                 data_prov = data_prov_tree[prov_index]
-                text_prov = "\\n🏙" + area_req + "数据：\\n确诊:"
+                # output_log(data_prov)
+                text_prov = text_prov + "\\n🏙" + area_req + "数据：\\n确诊:"
                 text_prov = text_prov + str(data_prov['total']['confirm']) + "(+" + str(data_prov['today']['confirm']) + ")\\t疑似:" + str(data_prov['total']['suspect']) + "(+" + str(data_prov['today']['suspect']) + ")\\n死亡:" + str(data_prov['total']['dead']) + "(+" + str(data_prov['today']['dead']) + ")\\t\\t治愈:" + str(data_prov['total']['heal']) + "(+" + str(data_prov['today']['heal']) + ")\\n"
                 for city in data_prov['children']:
                     text_prov = text_prov + "▪" + city['name'] + "数据:\\n确诊:" + str(city['total']['confirm']) + "(+" + str(city['today']['confirm']) + ")\\t\\t疑似:" + str(city['total']['suspect']) + "(+" + str(city['today']['suspect']) + ")\\n死亡:" + str(city['total']['dead']) + "(+" + str(city['today']['dead']) + ")\\t\\t治愈:" + str(city['total']['heal']) + "(+" + str(city['today']['confirm']) + ")\\n"
 
-        output_log("数据获取成功，准备推送至IFTTT。")
+        output_log("\n数据获取成功，准备推送至IFTTT。")
         IFTTT_push(text_dome, text_prov, False)
     except:
         try:
@@ -70,9 +75,6 @@ def get_data():
             output_log("数据获取失败！请检查网路！\n")
     
     output_log("本轮推送结束。")
-#    vars = (res, res, data_dome, text_dome, data_prov, text_prov, text_prov)
-#    for var in vars: del var
-#    output_log("变量释放完成。\n")
 
 def IFTTT_push(push_text_1, push_text_2, silent_mode):
     push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n推送内容："
@@ -97,9 +99,9 @@ def read_urls(path):
 
 if __name__ == "__main__":
     post_urls = read_urls(sub_doc_path)
-    IFTTT_push("程序已上线。","推送模式：整点推送。\\n", True)
+    IFTTT_push("程序已上线。\\n当前版本：" + cur_version, "推送模式：整点推送。\\n", True)
 
-    output_log("程序已上线。")
+    output_log("程序已上线。当前版本：" + cur_version)
     output_log("当前设备 Host Name: " + host_name + "\n")
 
     output_log("开始运行推送服务。推送模式：整点推送。\n")
