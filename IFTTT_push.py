@@ -45,16 +45,16 @@ def get_data():
             text_dome = text_dome + "\\n[" + news[index]['time'] + "]" + news[index]['title']
 
 
-        data_prov = data['areaTree'][0]['children']
+        data_prov_tree = data['areaTree'][0]['children']
         for area_req in area_requested:
             prov_index = -1
             for i in range(len(data_prov)):
-                if (data_prov[i]['name'] == area_req):
+                if (data_prov_tree[i]['name'] == area_req):
                     prov_index = i
                     break
             
             if i >= 0:
-                data_prov = data_prov[prov_index]
+                data_prov = data_prov_tree[prov_index]
                 text_prov = "\\n🏙" + area_req + "数据：\\n确诊:"
                 text_prov = text_prov + str(data_prov['total']['confirm']) + "(+" + str(data_prov['today']['confirm']) + ")\\t疑似:" + str(data_prov['total']['suspect']) + "(+" + str(data_prov['today']['suspect']) + ")\\n死亡:" + str(data_prov['total']['dead']) + "(+" + str(data_prov['today']['dead']) + ")\\t\\t治愈:" + str(data_prov['total']['heal']) + "(+" + str(data_prov['today']['heal']) + ")\\n"
                 for city in data_prov['children']:
@@ -97,7 +97,7 @@ def read_urls(path):
 
 if __name__ == "__main__":
     post_urls = read_urls(sub_doc_path)
-    IFTTT_push("程序已上线。","推送模式：半点、整点推送。\\n", True)
+    IFTTT_push("程序已上线。","推送模式：整点推送。\\n", True)
 
     output_log("程序已上线。")
     output_log("当前设备 Host Name: " + host_name + "\n")
