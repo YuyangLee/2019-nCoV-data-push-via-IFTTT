@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import requests
-import pandas as paths
+import pandas as pds
 import socket
 
 from datetime import datetime
@@ -14,7 +14,6 @@ sub_doc_path = 'subscribed_urls.csv'
 post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
 host_name = socket.gethostname()
-
 
 def output_log(log_text): print("[", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "] ", log_text)
 
@@ -43,11 +42,20 @@ def get_data():
             index = len(news) - 1 - i
             text_dome = text_dome + "\\n[" + news[index]['time'] + "]" + news[index]['title']
 
-        data_prov = data['areaTree'][0]['children'][25]
-        text_prov = "\\n🏙宁夏数据：\\n确诊:"
-        text_prov = text_prov + str(data_prov['total']['confirm']) + "(+" + str(data_prov['today']['confirm']) + ")\\t疑似:" + str(data_prov['total']['suspect']) + "(+" + str(data_prov['today']['suspect']) + ")\\n死亡:" + str(data_prov['total']['dead']) + "(+" + str(data_prov['today']['dead']) + ")\\t\\t治愈:" + str(data_prov['total']['heal']) + "(+" + str(data_prov['today']['heal']) + ")\\n"
-        for city in data_prov['children']:
-            text_prov = text_prov + "▪" + city['name'] + "数据:\\n确诊:" + str(city['total']['confirm']) + "(+" + str(city['today']['confirm']) + ")\\t\\t疑似:" + str(city['total']['suspect']) + "(+" + str(city['today']['suspect']) + ")\\n死亡:" + str(city['total']['dead']) + "(+" + str(city['today']['dead']) + ")\\t\\t治愈:" + str(city['total']['heal']) + "(+" + str(city['today']['confirm']) + ")\\n"
+
+        data_prov = data['areaTree'][0]['children']
+        NXindex = -1
+        for i in range(len(data_prov)):
+            if (data_prov[i]['name'] == '宁夏'):
+                NXindex = i
+                break
+        
+        if i >= 0:
+            data_prov = data_prov[NXindex]
+            text_prov = "\\n🏙宁夏数据：\\n确诊:"
+            text_prov = text_prov + str(data_prov['total']['confirm']) + "(+" + str(data_prov['today']['confirm']) + ")\\t疑似:" + str(data_prov['total']['suspect']) + "(+" + str(data_prov['today']['suspect']) + ")\\n死亡:" + str(data_prov['total']['dead']) + "(+" + str(data_prov['today']['dead']) + ")\\t\\t治愈:" + str(data_prov['total']['heal']) + "(+" + str(data_prov['today']['heal']) + ")\\n"
+            for city in data_prov['children']:
+                text_prov = text_prov + "▪" + city['name'] + "数据:\\n确诊:" + str(city['total']['confirm']) + "(+" + str(city['today']['confirm']) + ")\\t\\t疑似:" + str(city['total']['suspect']) + "(+" + str(city['today']['suspect']) + ")\\n死亡:" + str(city['total']['dead']) + "(+" + str(city['today']['dead']) + ")\\t\\t治愈:" + str(city['total']['heal']) + "(+" + str(city['today']['confirm']) + ")\\n"
 
         output_log("数据获取成功，准备推送至IFTTT。")
         IFTTT_push(text_dome, text_prov, False)
@@ -78,7 +86,7 @@ def IFTTT_push(push_text_1, push_text_2, silent_mode):
         output_log("推送失败，请检查设置！\n")
 
 def read_urls(path):
-    a = paths.read_csv(path)
+    a = pds.read_csv(path)
     names = a['event_name']
     keys  = a['key']
     urls  = [post_url_p1 + names[i] + post_url_p2 + keys[i] for i in range(len(names))]
