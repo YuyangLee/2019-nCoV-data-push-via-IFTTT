@@ -8,7 +8,7 @@ from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-cur_version = "1.0.0 Alpha"
+cur_version = "1.0.1 Alpha"
 
 get_Data_URL = "https://view.inews.qq.com/g2/getOnsInfo"
 sub_doc_path = 'subscribed_urls.csv'
