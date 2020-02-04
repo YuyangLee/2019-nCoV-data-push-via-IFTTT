@@ -3,12 +3,12 @@ import json
 import requests
 import pandas as pds
 import socket
+import datetime
 
-from datetime import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-cur_version = "1.0.1 Alpha"
+cur_version = "1.1.0 Alpha"
 
 get_Data_URL = "https://view.inews.qq.com/g2/getOnsInfo"
 sub_doc_path = 'subscribed_urls.csv'
@@ -23,7 +23,7 @@ CEE_left = (CEE_date - today).days
 
 area_requested = ['宁夏', '湖北']
 
-def output_log(log_text): print("[", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "] ", log_text)
+def output_log(log_text): print("[", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "] ", log_text)
 
 def get_data():
     output_log("开启一轮推送。\n")
@@ -81,7 +81,7 @@ def get_data():
     output_log("本轮推送结束。")
 
 def IFTTT_push(push_text_1, push_text_2, silent_mode):
-    push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n高考倒计时：" + str(CEE_left) + "天\\n推送内容："
+    push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n高考倒计时：" + str(CEE_left) + "天\\n推送内容："
     push_val2_text = "\\n" + push_text_1
     push_val3_text = "\\n" + push_text_2 + "\\n"
     body = "{ \"value1\": \"" + push_val1_text + "\", \"value2\": \"" + push_val2_text + "\", \"value3\": \"" + push_val3_text + "\" }"
