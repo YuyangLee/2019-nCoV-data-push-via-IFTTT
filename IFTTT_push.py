@@ -12,14 +12,13 @@ cur_version = "1.1.0 Alpha"
 
 get_Data_URL = "https://view.inews.qq.com/g2/getOnsInfo"
 sub_doc_path = 'subscribed_urls.csv'
+t_url = "https://maker.ifttt.com/trigger/program_push/with/key/fP7Zt7dO7IqmDBZI49uEUfagP4rnYK9gD5jTLYmKMRG"
 
 post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
 host_name   = socket.gethostname()
-
 CEE_date = datetime.date(2020, 6, 7)
-today    = datetime.date.today()
-CEE_left = (CEE_date - today).days
+
 
 area_requested = ['宁夏', '湖北']
 
@@ -81,6 +80,9 @@ def get_data():
     output_log("本轮推送结束。")
 
 def IFTTT_push(push_text_1, push_text_2, silent_mode):
+    today    = datetime.date.today()
+    CEE_left = (CEE_date - today).days
+
     push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n高考倒计时：" + str(CEE_left) + "天\\n推送内容："
     push_val2_text = "\\n" + push_text_1
     push_val3_text = "\\n" + push_text_2 + "\\n"
@@ -95,14 +97,16 @@ def IFTTT_push(push_text_1, push_text_2, silent_mode):
         output_log("推送失败，请检查设置！\n")
 
 def read_urls(path):
+    return [t_url, ]
     a = pds.read_csv(path)
     names = a['event_name']
     keys  = a['key']
     urls  = [post_url_p1 + names[i] + post_url_p2 + keys[i] for i in range(len(names))]
     return urls
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     post_urls = read_urls(sub_doc_path)
+
     IFTTT_push("程序已上线。\\n当前版本：" + cur_version, "推送模式：整点推送。\\n", True)
 
     output_log("程序已上线。当前版本：" + cur_version)
