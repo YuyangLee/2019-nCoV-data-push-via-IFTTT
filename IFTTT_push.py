@@ -17,6 +17,10 @@ post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
 host_name   = socket.gethostname()
 
+CEE_date = datetime.date(2020, 6, 7)
+today    = datetime.date.today()
+CEE_left = (CEE_date - today).days
+
 area_requested = ['宁夏', '湖北']
 
 def output_log(log_text): print("[", datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "] ", log_text)
@@ -53,7 +57,7 @@ def get_data():
             prov_index = -1
             for i in range(len(data_prov_tree)):
                 if data_prov_tree[i]['name'] == area_req:
-                    output_log("于索引 " + str(i) + " 找到 " + area_req + "数据。")
+                    output_log("于索引 " + str(i) + " 获取到到 " + area_req + "数据。")
                     prov_index = i
                     break
             
@@ -65,7 +69,7 @@ def get_data():
                 for city in data_prov['children']:
                     text_prov = text_prov + "▪" + city['name'] + "数据:\\n确诊:" + str(city['total']['confirm']) + "(+" + str(city['today']['confirm']) + ")\\t\\t疑似:" + str(city['total']['suspect']) + "(+" + str(city['today']['suspect']) + ")\\n死亡:" + str(city['total']['dead']) + "(+" + str(city['today']['dead']) + ")\\t\\t治愈:" + str(city['total']['heal']) + "(+" + str(city['today']['confirm']) + ")\\n"
 
-        output_log("\n数据获取成功，准备推送至IFTTT。")
+        output_log("数据获取成功，准备推送至IFTTT。")
         IFTTT_push(text_dome, text_prov, False)
     except:
         try:
@@ -77,7 +81,7 @@ def get_data():
     output_log("本轮推送结束。")
 
 def IFTTT_push(push_text_1, push_text_2, silent_mode):
-    push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n推送内容："
+    push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n高考倒计时：" + str(CEE_left) + "天\\n推送内容："
     push_val2_text = "\\n" + push_text_1
     push_val3_text = "\\n" + push_text_2 + "\\n"
     body = "{ \"value1\": \"" + push_val1_text + "\", \"value2\": \"" + push_val2_text + "\", \"value3\": \"" + push_val3_text + "\" }"
