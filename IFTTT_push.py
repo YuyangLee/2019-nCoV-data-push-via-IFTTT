@@ -8,19 +8,17 @@ import datetime
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-cur_version = "1.1.0 Alpha"
+cur_version = "1.1.1 Alpha"
 
 get_Data_URL = "https://view.inews.qq.com/g2/getOnsInfo"
-sub_doc_path = 'subscribed_urls.csv'
-t_url = "https://maker.ifttt.com/trigger/program_push/with/key/fP7Zt7dO7IqmDBZI49uEUfagP4rnYK9gD5jTLYmKMRG"
+sub_doc_path = r"subscribed_urls.csv"
 
 post_url_p1 = "https://maker.ifttt.com/trigger/"
 post_url_p2 = "/with/key/"
 host_name   = socket.gethostname()
-CEE_date = datetime.date(2020, 6, 7)
 
-
-area_requested = ['宁夏', '湖北']
+CEE_date = datetime.date(2020, 6, 7)    # 这一字符串是推送地址数据的 csv 文件地址
+area_requested = ['宁夏', '湖北']        # 这一列表包含了你订阅数据的省（自治区、直辖市）
 
 def output_log(log_text): print("[", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "] ", log_text)
 
@@ -97,7 +95,6 @@ def IFTTT_push(push_text_1, push_text_2, silent_mode):
         output_log("推送失败，请检查设置！\n")
 
 def read_urls(path):
-    return [t_url, ]
     a = pds.read_csv(path)
     names = a['event_name']
     keys  = a['key']
