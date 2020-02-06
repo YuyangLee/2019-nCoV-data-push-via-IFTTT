@@ -75,13 +75,13 @@ def get_data():
         except:
             output_log("数据获取失败！请检查网路！\n")
     
-    output_log("本轮推送结束。")
+    output_log("本轮推送结束。\n\n")
 
 def IFTTT_push(push_text_1, push_text_2, silent_mode):
     today    = datetime.date.today()
     CEE_left = (CEE_date - today).days
 
-    push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n高考倒计时：" + str(CEE_left) + "天\\n推送内容："
+    push_val1_text = "2019-nCoV 数据推送\\n推送时间：" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + " GMT+8\\n推送设备：" + host_name + "\\n高考倒计时：" + str(CEE_left) + "天\\n\\n推送内容："
     push_val2_text = "\\n" + push_text_1
     push_val3_text = "\\n" + push_text_2 + "\\n"
     body = "{ \"value1\": \"" + push_val1_text + "\", \"value2\": \"" + push_val2_text + "\", \"value3\": \"" + push_val3_text + "\" }"
